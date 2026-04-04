@@ -9,7 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(PROJECT_ROOT))
 
 from src.config import settings
-from src.retriever import BM25Retriever
+from src.retriever import HybridRetriever
 from src.prompt_builder import build_user_prompt
 from src.generator import GeminiGenerator
 
@@ -20,12 +20,17 @@ def main() -> None:
     parser.add_argument("--top_k", type=int, default=settings.top_k)
     args = parser.parse_args()
 
-    retriever = BM25Retriever.load(settings.bm25_index_path)
-    results = retriever.retrieve(args.question, top_k=args.top_k)
+    retriever = HybridRetriever.load(settings.hybrid_index_path)
+    results = retriever.retrieve(
+        args.question,
+        top_k=args.top_k,
+        expanded_top_k=settings.expanded_top_k,
+        neighbor_window=settings.neighbor_window,
+    )
 
     print("\n=== Retrieved Evidence ===")
     for i, r in enumerate(results, start=1):
-        print(f"[{i}] page={r.page_num}, score={r.score:.4f}")
+        print(f"[{i}] page={r.page_num}, score={r.score:.4f}, section={r.section_title}")
         print(r.text[:500])
         print("-" * 80)
 

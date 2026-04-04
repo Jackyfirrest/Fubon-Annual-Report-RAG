@@ -10,3 +10,4 @@ faiss-cpu
 jupyter
 matplotlib
 google-genai
+numpy
