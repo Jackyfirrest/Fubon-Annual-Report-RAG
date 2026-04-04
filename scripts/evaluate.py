@@ -16,6 +16,8 @@ from src.generator import GeminiGenerator
 from src.evaluator import evaluate_prediction
 from src.utils import write_json
 
+import time
+
 
 def main() -> None:
     qa_df = load_qa_excel(settings.raw_qa_path)
@@ -36,6 +38,9 @@ def main() -> None:
         evidence_text = "\n\n".join([f"[Page {r.page_num}] {r.text}" for r in retrieval_results])
         prompt = build_user_prompt(question, retrieval_results, settings.max_context_chars)
         response = generator.generate_json(prompt)
+        
+        # avoid api limit issues by adding a delay between requests
+        time.sleep(15) 
 
         pred_answer = str(response.get("answer", "")).strip()
         pred_citations = response.get("citations", [])
