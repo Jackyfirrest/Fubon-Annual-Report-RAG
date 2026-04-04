@@ -7,6 +7,6 @@ scikit-learn
 rank-bm25
 sentence-transformers
 faiss-cpu
-openai
 jupyter
 matplotlib
+google-genai
