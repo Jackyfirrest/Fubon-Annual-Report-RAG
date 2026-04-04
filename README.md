@@ -33,8 +33,8 @@ Set GEMINI_API_KEY in .env.
 
 ### 2. Put raw files into data/raw/
 
-20250516180014-7.pdf
-題目一_附件_問答集.xlsx
+- 20250516180014-7.pdf
+- 題目一_附件_問答集.xlsx
 
 ### 3. Run full pipeline
 
@@ -44,9 +44,9 @@ Set GEMINI_API_KEY in .env.
 
 Outputs:
 
-results/predictions.csv
-results/evaluation_summary.json
-results/error_analysis.csv
+- results/predictions.csv
+- results/evaluation_summary.json
+- results/error_analysis.csv
 
 ### 4. Manual review
 
