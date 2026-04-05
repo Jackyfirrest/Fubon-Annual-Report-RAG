@@ -20,15 +20,11 @@ Build a retrieval-augmented generation system that:
 
 ## System Design
 
-User Question
-    ↓
-Hybrid Retrieval (BM25 + TF-IDF + Embedding (sentence-transformers + FAISS))
-    ↓
-Top-k Relevant Chunks
-    ↓
-LLM (Gemini) Answer Generation
-    ↓
-Evaluation & Hallucination Check
+1. User Question
+2. Hybrid Retrieval (BM25 + TF-IDF + Embedding (sentence-transformers + FAISS))
+3. Top-k Relevant Chunks
+4. LLM (Gemini) Answer Generation
+5. Evaluation & Hallucination Check
 
 ## Reproducible Pipeline
 
