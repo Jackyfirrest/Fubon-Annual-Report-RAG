@@ -12,6 +12,8 @@ from src.config import settings
 from src.retriever import HybridRetriever
 from src.prompt_builder import build_user_prompt
 from src.generator import GeminiGenerator
+from src.embeddings import LocalSentenceTransformerEmbedder
+from src.vector_store import FaissVectorStore
 
 
 def main() -> None:
@@ -21,6 +23,15 @@ def main() -> None:
     args = parser.parse_args()
 
     retriever = HybridRetriever.load(settings.hybrid_index_path)
+
+    vector_store = FaissVectorStore.load(settings.dense_index_path, settings.dense_meta_path)
+    embedder = LocalSentenceTransformerEmbedder(
+        model_name=settings.local_embedding_model,
+        device=settings.local_embedding_device,
+        normalize_embeddings=settings.local_embedding_normalize,
+    )
+    retriever.attach_dense_retrieval(vector_store, embedder)
+
     results = retriever.retrieve(
         args.question,
         top_k=args.top_k,

@@ -18,9 +18,10 @@ def main() -> None:
         bm25_weight=settings.bm25_weight,
         tfidf_weight=settings.tfidf_weight,
         overlap_weight=settings.overlap_weight,
+        dense_weight=settings.dense_weight,
     )
     retriever.save(settings.hybrid_index_path)
-    print(f"[OK] hybrid index saved to {settings.hybrid_index_path}")
+    print(f"[OK] sparse/hybrid retriever saved to {settings.hybrid_index_path}")
 
 
 if __name__ == "__main__":

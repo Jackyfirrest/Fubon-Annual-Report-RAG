@@ -15,12 +15,23 @@ from src.prompt_builder import build_user_prompt
 from src.generator import GeminiGenerator
 from src.evaluator import evaluate_prediction
 from src.utils import write_json
+from src.embeddings import LocalSentenceTransformerEmbedder
+from src.vector_store import FaissVectorStore
 
 import time
 
 def main() -> None:
     qa_df = load_qa_excel(settings.raw_qa_path)
+
     retriever = HybridRetriever.load(settings.hybrid_index_path)
+    vector_store = FaissVectorStore.load(settings.dense_index_path, settings.dense_meta_path)
+    embedder = LocalSentenceTransformerEmbedder(
+        model_name=settings.local_embedding_model,
+        device=settings.local_embedding_device,
+        normalize_embeddings=settings.local_embedding_normalize,
+    )
+    retriever.attach_dense_retrieval(vector_store, embedder)
+
     generator = GeminiGenerator()
 
     rows = []
@@ -43,7 +54,7 @@ def main() -> None:
         prompt = build_user_prompt(question, retrieval_results, settings.max_context_chars)
         response = generator.generate_json(prompt)
 
-        time.sleep(5)  # add delay to avoid hitting rate limits
+        time.sleep(5) # avoid hitting rate limits 
 
         pred_answer = str(response.get("answer", "")).strip()
         pred_citations = response.get("citations", [])
@@ -73,7 +84,7 @@ def main() -> None:
                 "model_is_refusal": is_refusal,
                 "reasoning_note": reasoning_note,
                 "is_correct": eval_result.is_correct,
-                "final_is_correct": eval_result.is_correct,  # 之後可人工覆寫
+                "final_is_correct": eval_result.is_correct,
                 "hallucination_label": eval_result.hallucination_label,
                 "evaluation_note": eval_result.note,
                 "match_method": eval_result.match_method,
