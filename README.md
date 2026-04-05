@@ -18,6 +18,18 @@ Build a retrieval-augmented generation system that:
 - `scripts/`: runnable scripts
 - `results/`: predictions and evaluation outputs
 
+## System Design
+
+User Question
+    ↓
+Hybrid Retrieval (BM25 + TF-IDF + Embedding (sentence-transformers + FAISS))
+    ↓
+Top-k Relevant Chunks
+    ↓
+LLM (Gemini) Answer Generation
+    ↓
+Evaluation & Hallucination Check
+
 ## Reproducible Pipeline
 
 ### 1. Setup
